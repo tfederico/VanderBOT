@@ -1,6 +1,6 @@
 import qi
 
-from bayesianNetwork import BeliefNetwork
+#from bayesianNetwork import BeliefNetwork
 from faceDetection import *
 from faceRecognition import *
 
@@ -21,7 +21,7 @@ class Robot:
         try:
             self.session.connect("tcp://" + self.IP + ":" + str(self.PORT))
         except RuntimeError:
-            print "Can't connect to Naoqi at ip \"" + self.IP + "\" on port " + str(self.PORT) + ".\n"
+            print("Can't connect to Naoqi at ip \"" + self.IP + "\" on port " + str(self.PORT) + ".\n")
             quit(-1)
         self.video_service = None
         self.camera_name_id = None
@@ -34,7 +34,7 @@ class Robot:
         self.led_service = None
         self.training_data = TrainingData()
         self.informants = 0
-        self.beliefs = []
+        #self.beliefs = []
         self.landmark_service = None
         self.memory_service = None
         self.speech_service = None
@@ -79,7 +79,7 @@ class Robot:
             self.led_service.off("FaceLeds")
             hexcolor = None
         else:
-            print "color " + str(color) + " not recognized"
+            print("color " + str(color) + " not recognized")
             hexcolor = None
         if color != "OFF":
             self.led_service.fadeRGB("FaceLeds", hexcolor, speed)
@@ -116,7 +116,7 @@ class Robot:
             self.cam_w = 320
             self.cam_h = 240
             self.camera_name_id = self.video_service.subscribeCamera("Trust_Video", 0, resolution_type, 13, fps)
-        except BaseException, err:
+        except BaseException as err:
             print("[ERROR] video_proxy_subscribe: catching error " + str(err))
             quit(-1)
 
@@ -130,9 +130,9 @@ class Robot:
         # Gets the raw image
         result = self.video_service.getImageRemote(self.camera_name_id)
         if result is None:
-            print 'cannot capture.'
+            print('cannot capture.')
         elif result[6] is None:
-            print 'no image data string.'
+            print('no image data string.')
         else:
             # Translates the value to mat
             values = map(ord, list(str(result[6])))
@@ -235,8 +235,8 @@ class Robot:
         recognition_update(new_data.prepare_for_training())
         # Creates an episodic belief network
         name = "Informer" + str(self.informants) + "_episodic"
-        episodic_network = BeliefNetwork.create_episodic(self.beliefs, self.get_and_inc_time(), name=name)
-        self.beliefs.append(episodic_network)
+        #episodic_network = BeliefNetwork.create_episodic(self.beliefs, self.get_and_inc_time(), name=name)
+        #self.beliefs.append(episodic_network)
         # Updates the total of known informants
         self.informants += 1    # This is done at the end because the label for the class is actually self.informants-1
 
@@ -267,7 +267,7 @@ class Robot:
         period = 500
         try:
             self.landmark_service.subscribe("findSticker", period, 0.0)
-        except BaseException, err:
+        except BaseException as err:
             print("[ERROR] landmark_service_subscribe: catching error " + str(err))
             quit(-1)
         is_landmark_there = None
@@ -300,8 +300,8 @@ class Robot:
         keys.append([-0.244346])
         try:
             self.motion_service.angleInterpolation(names, keys, times, True);
-        except BaseException, err:
-            print err
+        except BaseException as err:
+            print(err)
 
     # Looks at box B
     def look_B(self):
@@ -316,8 +316,8 @@ class Robot:
         keys.append([0.403171])
         try:
             self.motion_service.angleInterpolation(names, keys, times, True);
-        except BaseException, err:
-            print err
+        except BaseException as err:
+            print(err)
 
     # Looks forward
     def look_forward(self):
@@ -332,15 +332,15 @@ class Robot:
         keys.append([-0.00618])
         try:
             self.motion_service.angleInterpolation(names, keys, times, True);
-        except BaseException, err:
-            print err
+        except BaseException as err:
+            print(err)
 
     # Listen to speech in order to recognize a word in a list of given words
     def listen_for_words(self, vocabulary):
         self.speech_service.setVocabulary(vocabulary, False)
         try:
             self.speech_service.subscribe("ListenWord")
-        except BaseException, err:
+        except BaseException as err:
             print("[ERROR] speech_proxy_subscribe: catching error " + str(err))
             quit(-1)
         while True:
@@ -365,7 +365,7 @@ class Robot:
     def listen_for_side(self, vocabulary):
         # Checks the vocabulary validity: must be a list of two elements
         if not isinstance(vocabulary, list) or len(vocabulary) != 2:
-            print "Invalid vocabulary: ", vocabulary
+            print("Invalid vocabulary: ", vocabulary)
             quit(-1)
         else:
             word = self.listen_for_words(vocabulary)
@@ -377,8 +377,8 @@ class Robot:
         try:
             self.motion_service.setStiffnesses("Body", 1.0)
             self.posture_service.goToPosture("Stand", 1.0)
-        except BaseException, err:
-            print err
+        except BaseException as err:
+            print(err)
 
     # Makes the robot sit down
     def sitdown(self):
@@ -387,8 +387,8 @@ class Robot:
             self.motion_service.setStiffnesses("Body", 1.0)
             self.posture_service.goToPosture("Sit", 1.0)
             self.motion_service.setStiffnesses("Body", 0.0)
-        except BaseException, err:
-            print err
+        except BaseException as err:
+            print(err)
 
     # Load time value from file
     def load_time(self):
@@ -407,20 +407,20 @@ class Robot:
         return previous_time
 
     # Saves the beliefs
-    def save_beliefs(self):
-        if not os.path.exists(".\\datasets"):
-            os.makedirs(".\\datasets")
-        for belief in self.beliefs:
-            belief.save()
+    #def save_beliefs(self):
+    #    if not os.path.exists(".\\datasets"):
+    #        os.makedirs(".\\datasets")
+    #    for belief in self.beliefs:
+    #        belief.save()
 
     # Loads the beliefs
-    def load_beliefs(self, path=".\\datasets\\"):
-        # Resets previous beliefs
-        self.beliefs = []
-        i = 0
-        while os.path.isfile(path + "Informer" + str(i) + ".csv"):
-            self.beliefs.append(BeliefNetwork("Informer" + str(i), path + "Informer" + str(i) + ".csv"))
-            i += 1
+    #def load_beliefs(self, path=".\\datasets\\"):
+    #    # Resets previous beliefs
+    #    self.beliefs = []
+    #    i = 0
+    #    while os.path.isfile(path + "Informer" + str(i) + ".csv"):
+    #        self.beliefs.append(BeliefNetwork("Informer" + str(i), path + "Informer" + str(i) + ".csv"))
+    #        i += 1
 
     # Reset time
     def reset_time(self):
