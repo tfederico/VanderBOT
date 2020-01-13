@@ -1,6 +1,7 @@
-from faceRecognition import *
+#from faceRecognition import *
 from robot import Robot
 import numpy as np
+import cv2
 
 """ 
 This simulated robot is to be used in virtual experiments. It inheritates the RobotCV.Robot methods, but
@@ -13,15 +14,9 @@ Movement and postural methods will only produce a textual description of the act
 class SimulatedRobot(Robot):
     def __init__(self):
         # This class doesn't call it's superclass initializer because it can't connect a session and retrieve services
-        self.IP = 'pepper.local'
+        self.IP = 'nao.local'
         self.PORT = 9559
-        self.training_data = TrainingData()
-        self.informants = 0
-        self.beliefs = []
-        self.time = None
-        self.load_time()
-        # Adds the landmark position to the simulation
-        self.landmark_position = 'A'
+        self.cam = cv2.VideoCapture(0)
 
     # Disables functions not runnable in simulation
 
@@ -55,17 +50,17 @@ class SimulatedRobot(Robot):
         print "{Robot is sitting down}"
 
     # Working, redefined methods
-
+    
     def get_camera_image(self):
-        image = np.zeros((480, 640, 3), np.uint8)
-        cam = cv2.VideoCapture(0)  # 0 -> index of camera
-        success, img = cam.read()
+        #image = np.zeros((480, 640, 3), np.uint8)
+          # 0 -> index of camera
+        success, img = self.cam.read()
         if success:  # frame captured without any errors
             return img
         else:
             return None
 
-    # Includes a visual debug screen
+    """# Includes a visual debug screen
     def collect_face_frames(self, number):
         face_frames = []
         found_faces = 0
@@ -104,12 +99,12 @@ class SimulatedRobot(Robot):
             if position == "left":
                 self.landmark_position = 'A'
             else:
-                self.landmark_position = 'B'
+                self.landmark_position = 'B'"""
 
     def say(self, words):
         print "[ROBOT SAYS] " + words
 
-    def listen_for_words(self, vocabulary):
+    """def listen_for_words(self, vocabulary):
         while True:
             word = input('Input: ')
             word = word.lower()
@@ -126,4 +121,4 @@ class SimulatedRobot(Robot):
             return "B"
         else:
             print "[ERROR] listen_for_side: invalid input: " + str(side)
-            quit()
+            quit()"""

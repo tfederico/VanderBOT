@@ -1,21 +1,22 @@
 import time
-from robot import Robot
+from simulatedRobot import SimulatedRobot
 
 
 def test():
-    nao = Robot(ip="192.168.0.104")
-    nao.video_service_subscribe()
-    nao.standup()
+    nao = SimulatedRobot()
+    #nao.video_service_subscribe()
+    #nao.standup()
 
     start = time.time()
 
     for i in range(30):
-        nao.get_camera_image()
+        img = nao.get_camera_image()
+        print(img)
 
     print("Time to capture 30 frames: {}".format(time.time() - start))
 
-    nao.video_service_subscribe()
-    nao.sitdown()
+    #nao.video_service_subscribe()
+    #nao.sitdown()
 
 
 if __name__ == "__main__":
