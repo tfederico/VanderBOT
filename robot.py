@@ -1,12 +1,12 @@
 import qi
 
 #from bayesianNetwork import BeliefNetwork
-from faceDetection import *
-from faceRecognition import *
+#from faceDetection import *
+#from faceRecognition import *
 
 import numpy as np
 import time
-
+import os
 """
 This class models a physical Softbank robot (NAO or Pepper).
 Programmed on NAOqi version 2.5.5.
@@ -30,17 +30,17 @@ class Robot:
         self.tts_service = None
         self.motion_service = None
         self.posture_service = None
-        self.tracker_service = None
+        #self.tracker_service = None
         self.led_service = None
-        self.training_data = TrainingData()
+        #self.training_data = TrainingData()
         self.informants = 0
         #self.beliefs = []
-        self.landmark_service = None
+        #self.landmark_service = None
         self.memory_service = None
         self.speech_service = None
         self.time = None
         self.load_time()
-        self.animation_service = None
+        #self.animation_service = None
         self.audio_service = None
         self.service_setup()
 
@@ -52,13 +52,13 @@ class Robot:
         self.tts_service = self.session.service("ALAnimatedSpeech")
         self.motion_service = self.session.service("ALMotion")
         self.posture_service = self.session.service("ALRobotPosture")
-        self.tracker_service = self.session.service("ALTracker")    # For older versions of NAOqi use ALFaceTracker
+        #self.tracker_service = self.session.service("ALTracker")    # For older versions of NAOqi use ALFaceTracker
         self.led_service = self.session.service("ALLeds")
-        self.landmark_service = self.session.service("ALLandMarkDetection")
+        #self.landmark_service = self.session.service("ALLandMarkDetection")
         self.memory_service = self.session.service("ALMemory")
         self.speech_service = self.session.service("ALSpeechRecognition")
         self.speech_service.setLanguage("English")
-        self.animation_service = self.session.service("ALAnimationPlayer")
+        #self.animation_service = self.session.service("ALAnimationPlayer")
         self.audio_service = self.session.service("ALAudioPlayer")
 
     # Sets the color of the head leds
@@ -92,12 +92,12 @@ class Robot:
     def set_face_tracking(self, enabled, face_width=0.5):
         if enabled:
             self.motion_service.setStiffnesses("Head", 1.0)
-            self.tracker_service.registerTarget("Face", face_width)
-            self.tracker_service.track("Face")
+            #self.tracker_service.registerTarget("Face", face_width)
+            #self.tracker_service.track("Face")
             # self.set_led_color("green")
         else:
-            self.tracker_service.stopTracker()
-            self.tracker_service.unregisterAllTargets()
+            #self.tracker_service.stopTracker()
+            #self.tracker_service.unregisterAllTargets()
             self.set_led_color("white")
 
     # Subscribes the video service to retrieve data from cameras
@@ -112,10 +112,10 @@ class Robot:
             #             AL::kBGRColorSpace BGR (to use in OpenCV) (index=13, channels=3)
             # Fps= OV7670 VGA camera can only run at 30, 15, 10 and 5fps. The MT9M114 HD camera run from 1 to 30fps.
             resolution_type = 1
-            fps = 15
+            fps = 10
             self.cam_w = 320
             self.cam_h = 240
-            self.camera_name_id = self.video_service.subscribeCamera("Trust_Video", 0, resolution_type, 13, fps)
+            self.camera_name_id = self.video_service.subscribeCamera("Trust_Video", 1, resolution_type, 11, fps)
         except BaseException as err:
             print("[ERROR] video_proxy_subscribe: catching error " + str(err))
             quit(-1)
@@ -179,7 +179,7 @@ class Robot:
         self.video_service_unsubscribe()
         return face_frames
 
-    # Obtains training samples of one of the informers
+    """# Obtains training samples of one of the informers
     # Automatically updates the informant number
     # Saves the frames in the captures directory
     def acquire_examples(self, number_of_frames, informant_number):
@@ -197,7 +197,7 @@ class Robot:
 
     # Finalizes learning by training the model with all the data acquired
     def face_learning(self):
-        recognition_train(self.training_data.prepare_for_training())
+        recognition_train(self.training_data.prepare_for_training())"""
 
     # Recognizes a face
     # Collects an amount of frames, gets a prediction on each of them and returns the most predicted label
@@ -226,7 +226,7 @@ class Robot:
                 self.say("I've never seen you before, I'll call you informer " + str(guess))
         return guess
 
-    # Manages the unknown informant detection
+    """# Manages the unknown informant detection
     def manage_unknown_informant(self, frames):
         # Updates the model with the acquired frames and the right label
         new_data = TrainingData()
@@ -285,7 +285,7 @@ class Robot:
         self.landmark_service.unsubscribe("findSticker")
         self.look_forward()
         self.set_face_tracking(True)
-        return is_landmark_there
+        return is_landmark_there"""
 
     # Looks at box A:
     def look_A(self):
