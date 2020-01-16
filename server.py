@@ -5,14 +5,7 @@ from messages import Request, Response
 from datetime import datetime
 import time as t
 
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-pickle.HIGHEST_PROTOCOL = 2
-
 from ast import literal_eval
-import base64
 
 class Server(object):
     def __init__(self, host, port):
@@ -23,7 +16,7 @@ class Server(object):
         # Start
         self.listen_and_respond()
 
-    def route_request(request):
+    def route_request(self, request):
         pass
 
     # Waits for a request, processes it and responds
@@ -52,7 +45,7 @@ class Server(object):
                 # Reads the request
 
                 data = conn.recv(4096)
-                request = literal_eval(data)
+                request = literal_eval(data.decode('utf-8'))
                 request = Request(request['command'], request['parameters'])
 
                 print('+-' + '-' * format_width + '-+')
@@ -61,8 +54,8 @@ class Server(object):
                 # Performs an operation
                 response = self.route_request(request)  # Routing function, returns a Response
                 # Sends back the data
-                data = str(response.__dict__)
-                #print(data)
+                data = str(response.__dict__).encode('utf-8')
+
                 if camera_op:
                     conn.sendall(data)
                 else:

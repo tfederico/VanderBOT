@@ -1,12 +1,10 @@
 from server import Server
 from robot import Robot
 from simulatedRobot import SimulatedRobot
-from PIL import Image
-from PIL import ImageDraw, ImageFont
-from messages import Request, Response, RemoteActionFailedException
+from messages import Response
 import cv2 as cv
 import base64
-import numpy as np
+
 
 class SimulatedNaoServer(Server):
     def __init__(self, nao_ip="nao.local", nao_port=9559, ip="127.0.0.1", port=54321):
@@ -15,14 +13,12 @@ class SimulatedNaoServer(Server):
         self.nao = SimulatedRobot(nao_ip, nao_port)
         print("Connected to Nao")
         super(SimulatedNaoServer, self).__init__(ip, port)
-        
-        
     
     # Manages the request, based on the command tag
     def route_request(self, request):
 
         if request.command == "PING":
-            response = 5
+            response = super(SimulatedNaoServer, self).ping()
         elif request.command == "CAMERA":
             response = self.get_camera_image()
         elif request.command == "LED":
@@ -36,7 +32,7 @@ class SimulatedNaoServer(Server):
         elif request.command == "SAY":
             response = self.say(request.parameters)
         elif request.command == "CLOSE":
-            response = Server.close()
+            response = super(SimulatedNaoServer, self).close()
         else:
             # Command not recognized
             response = Response(False, "Invalid command code")
@@ -55,11 +51,8 @@ class SimulatedNaoServer(Server):
     # Captures a single image frame from the cameras
     def get_camera_image(self):
         img = self.nao.get_camera_image()
-        print(type(img))
         retval, buff = cv.imencode(".jpg", img)
-        print(type(buff))
         data = base64.b64encode(buff)
-        print(type(data))
         return Response(True, data)
 
     # Listen to speech in order to recognize a word in a list of given words
@@ -75,6 +68,7 @@ class SimulatedNaoServer(Server):
     def sitdown(self):
         self.nao.sitdown()
         return Response(True, None)
+
 
 if __name__ == "__main__":
     server = SimulatedNaoServer()

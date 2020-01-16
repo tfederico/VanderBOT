@@ -6,13 +6,7 @@ from messages import Request, Response
 import base64
 import cv2 as cv
 import numpy as np
-import cStringIO as csio
-import PIL.Image as Image
-try:
-    import cPickle as pickle
-except ImportError:
-    import pickle
-pickle.HIGHEST_PROTOCOL = 2
+import time
 
 
 class Client():
@@ -39,7 +33,7 @@ class Client():
         while not self.connect_to_proxy():   # Open connection
             time.sleep(1)       # In case server is offline, continues to try
 
-        self.socket.send(data_out)
+        self.socket.send(data_out.encode('utf-8'))
         # Now wait for response
         try:
             if camera_op:            # If it's an image, incrementally receive all the data chunks
@@ -63,11 +57,12 @@ class Client():
         self.socket.shutdown(socket.SHUT_WR)
         self.socket.close()
 
+
 if __name__ == "__main__":
     client = Client()
 
-    response = client.send_image_request(Request("CAMERA", None))
-    print(response)
+    response = client.send_image_request(Request("CAMERA", None)).decode('utf-8')
+    print(type(response))
     img_value = literal_eval(response)['values']
     print(type(img_value))
     buff = base64.b64decode(img_value)
@@ -76,6 +71,8 @@ if __name__ == "__main__":
     print(type(buff_arr))
     img = cv.imdecode(buff_arr, cv.IMREAD_UNCHANGED)
     print(type(img))
+
     cv.imshow("", img)
     cv.waitKey(0)
+
     client.connection_close()

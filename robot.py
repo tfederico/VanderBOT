@@ -1,9 +1,6 @@
 import qi
 
 import numpy as np
-import time
-import os
-
 
 """
 This class models a physical Softbank robot (NAO or Pepper).
