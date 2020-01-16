@@ -12,42 +12,42 @@ Movement and postural methods will only produce a textual description of the act
 
 
 class SimulatedRobot(Robot):
-    def __init__(self):
+    def __init__(self, ip, port):
         # This class doesn't call it's superclass initializer because it can't connect a session and retrieve services
-        self.IP = 'nao.local'
-        self.PORT = 9559
+        self.IP = ip
+        self.PORT = port
         self.cam = cv2.VideoCapture(0)
 
     # Disables functions not runnable in simulation
 
     def service_setup(self):
-        print "proxy_setup: method not available for the simulated robot."
+        print("proxy_setup: method not available for the simulated robot.")
 
     def set_face_tracking(self, enabled, face_width=0.5):
-        print "set_face_tracking: method not available for the simulated robot."
+        print("set_face_tracking: method not available for the simulated robot.")
 
     def set_led_color(self, color, speed=0.5):
-        print "set_led_color: method not available for the simulated robot."
+        print("set_led_color: method not available for the simulated robot.")
 
     def landmark_detect(self):
-        print "landmark_detect: method not available for the simulated robot."
+        print("landmark_detect: method not available for the simulated robot.")
 
     # Descriptive postural and movement methods
 
     def look_A(self):
-        print "{Robot is looking at box A}"
+        print("{Robot is looking at box A}")
 
     def look_B(self):
-        print "{Robot is looking at box B}"
+        print("{Robot is looking at box B}")
 
     def look_forward(self):
-        print "{Robot is looking forward}"
+        print("{Robot is looking forward}")
 
     def standup(self):
-        print "{Robot is standing up}"
+        print("{Robot is standing up}")
 
     def sitdown(self):
-        print "{Robot is sitting down}"
+        print("{Robot is sitting down}")
 
     # Working, redefined methods
     
@@ -102,7 +102,7 @@ class SimulatedRobot(Robot):
                 self.landmark_position = 'B'"""
 
     def say(self, words):
-        print "[ROBOT SAYS] " + words
+        print("[ROBOT SAYS] " + words)
 
     """def listen_for_words(self, vocabulary):
         while True:

@@ -1,23 +1,23 @@
 import time
 from simulatedRobot import SimulatedRobot
+import cv2 as cv
 
-
-def test():
+def get_nao():
     nao = SimulatedRobot()
+    return nao 
+
+def capture_image(bot):
+    
     #nao.video_service_subscribe()
-    #nao.standup()
 
     start = time.time()
-
-    for i in range(30):
-        img = nao.get_camera_image()
-        print(img)
-
-    print("Time to capture 30 frames: {}".format(time.time() - start))
+    img = bot.get_camera_image()
+    print("Time: {}".format(time.time() - start))
 
     #nao.video_service_subscribe()
-    #nao.sitdown()
-
+    return img
 
 if __name__ == "__main__":
-    test()
+    img = capture_image(get_nao())
+    cv.imshow("test", img)
+    cv.waitKey(0)
