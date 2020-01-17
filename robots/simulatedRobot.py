@@ -1,6 +1,5 @@
 #from faceRecognition import *
-from robot import Robot
-import numpy as np
+from robots.robot import Robot
 import cv2
 
 """ 

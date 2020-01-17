@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import socket
-from messages import Request, Response
+from messages.messages import Request, Response
 from datetime import datetime
 import time as t
 

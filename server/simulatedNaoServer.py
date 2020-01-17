@@ -1,7 +1,6 @@
-from server import Server
-from robot import Robot
-from simulatedRobot import SimulatedRobot
-from messages import Response
+from server.server import Server
+from robots.simulatedRobot import SimulatedRobot
+from messages.messages import Response
 import cv2 as cv
 import base64
 
